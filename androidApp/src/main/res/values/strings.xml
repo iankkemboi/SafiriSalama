@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ChatGptBot</string>
+    <string name="activities_text">What activities would you like to do?</string>
+    <string name="chat_message_header">Where would you like to travel in Africa?</string>
+    <string name="chat_message_loading">AI is typing…</string>
+    <string name="chat_message_placeholder">Ask me anything…</string>
+    <string name="chat_message_error">An error happened. Click here to retry</string>
+</resources>
