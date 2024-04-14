@@ -2,12 +2,12 @@ package com.safirisalama.bot.android.chat.domain.usecase
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.safirisalama.bot.android.chat.data.api.OpenAIRepository
 import com.safirisalama.bot.android.chat.data.ConversationRepository
 import com.safirisalama.bot.android.chat.data.GPTAction
 import com.safirisalama.bot.android.chat.data.GPTResponse
 import com.safirisalama.bot.android.chat.data.Message
 import com.safirisalama.bot.android.chat.data.MessageStatus
+import com.safirisalama.bot.android.chat.data.api.OpenAIRepository
 import com.safirisalama.bot.android.chat.data.extractAction
 
 class SendChatRequestUseCase(
@@ -32,6 +32,7 @@ class SendChatRequestUseCase(
                 text = when (response.action) {
                     is GPTAction.DestinationSelection ->
                         "Great,what is your vibe?"
+
                     is GPTAction.FlightPricesSelection ->
                         "Sure,let me look below for flight prices"
 
@@ -51,7 +52,7 @@ class SendChatRequestUseCase(
             isFromUser = false,
             messageStatus = MessageStatus.Sent,
         )
-        conversationRepository.addMessage(newMessage)
+         conversationRepository.addMessage(newMessage)
         conversationRepository.setMessageStatusToSent(newMessage.id)
     }
 
@@ -63,6 +64,7 @@ class SendChatRequestUseCase(
         ) {
             is GPTAction.DestinationSelection ->
                 return GPTResponse.Action(action)
+
             is GPTAction.FlightPricesSelection ->
                 return GPTResponse.Action(action)
 

@@ -75,6 +75,7 @@ fun ChatScreen(
 
     val conversationState by conversation.observeAsState()
     val isSendingMessageState by isSendingMessage.observeAsState()
+    var previousList by remember { mutableStateOf<List<Message>?>(null) }
 
     fun sendMessageUiHandler(input: String) {
         uiHandlers.onSendMessage(input)
@@ -92,6 +93,7 @@ fun ChatScreen(
         var expanded by remember { mutableStateOf(false) }
         var selectedText by remember { mutableStateOf(destinations[0]) }
         var messagesList by remember { mutableStateOf(listOf<Message>()) }
+        var cleanMessagesList by remember { mutableStateOf(listOf<Message>()) }
         var message by remember { mutableStateOf(Message(text = "", isFromUser = true)) }
 
         var listItems = remember { mutableStateListOf<ListItem>() }
@@ -104,9 +106,10 @@ fun ChatScreen(
             )
         }
 
-        conversationState?.let {
-            messagesList = it.list
+        conversationState?.let { it1 ->
+            messagesList = it1.list
         }
+
 
         Column(
             modifier = Modifier
@@ -248,12 +251,36 @@ fun ChatScreen(
                         }
                     }
 
-                    MessageList(
+                    if (messagesList.isNotEmpty()) {
+                        if (listItems.size > 0) {
+                            listItems.removeRange(0, listItems.size - 1)
+                        }
+                        for (messageText in messagesList) {
+                            addMessageListItem(messageText, uiHandlers.onResendMessage)
+                        }
+                    }
+                   /* LaunchedEffect(messagesList) {
+                        if (!cleanMessagesList.contains(it)){
+                            cleanMessagesList[0] = it
+                        }
+                        addMessageListItem(it, uiHandlers.onResendMessage)
+                    }
+                    messagesList.co
+                   while( messagesList)
+                    { it ->
+                        if (!cleanMessagesList.contains(it)){
+                            cleanMessagesList[0] = it
+                        }
+                        addMessageListItem(it, uiHandlers.onResendMessage)
+                    }*/
+                    MyList(listItems = listItems)
+
+                    /*MessageList(
                         messagesList,
                         listState,
                         uiHandlers.onResendMessage,
                         viewModel,
-                    )
+                    )*/
                 }
             }
 
@@ -264,7 +291,9 @@ fun ChatScreen(
             ) {
                 TextField(
                     value = inputValue,
-                    onValueChange = { inputValue = it },
+                    onValueChange = {
+                         inputValue = it
+                    },
                     label = { Text(stringResource(id = R.string.chat_message_placeholder)) },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                     keyboardActions = KeyboardActions {
