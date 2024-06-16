@@ -5,6 +5,9 @@ compose = "1.6.3"
 compose-compiler = "1.5.4"
 compose-material3 = "1.2.1"
 androidx-activityCompose = "1.8.2"
+gradle = "8.1.0"
+googleServices = "4.4.1"
+firebaseAppdistributionGradle = "4.2.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -14,6 +17,9 @@ compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = 
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "gradle" }
+google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
+firebase-appdistribution-gradle = { group = "com.google.firebase", name = "firebase-appdistribution-gradle", version.ref = "firebaseAppdistributionGradle" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -6,6 +6,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,10 +38,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.safirisalama.bot.android.R
 import com.safirisalama.bot.android.chat.data.Message
 import com.safirisalama.bot.android.chat.data.MessageStatus
@@ -54,7 +62,7 @@ data class ChatScreenUiHandlers(
     val onResendMessage: (Message) -> Unit = {},
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ChatScreen(
     viewModel: ChatViewModel = getViewModel(),
@@ -131,9 +139,11 @@ fun ChatScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentSize(Alignment.Center)
-                                .padding(20.dp),
                         ) {
                             ExposedDropdownMenuBox(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp),
                                 expanded = expanded,
                                 onExpandedChange = {
                                     expanded = !expanded
@@ -148,10 +158,14 @@ fun ChatScreen(
                                             expanded = expanded,
                                         )
                                     },
-                                    modifier = Modifier.menuAnchor(),
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .fillMaxWidth(),
                                 )
 
                                 ExposedDropdownMenu(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
                                     expanded = expanded,
                                     onDismissRequest = { expanded = false },
                                 ) {
@@ -199,11 +213,15 @@ fun ChatScreen(
                             "Giraffe Breakfast",
                         )
 
-                        LazyRow {
-                            items(buttonList) { it ->
 
-                                var selected by remember { mutableStateOf(false) }
+                        FlowRow(modifier = Modifier.padding(1.dp)) {
+                            val selectedStates = remember { mutableStateMapOf<String, Boolean>() }
 
+                            // Populate initial states as false for each item
+                            buttonList.forEach { item ->
+                                selectedStates.putIfAbsent(item, false)
+                            }
+                            for (listItem in buttonList) {
                                 FilterChip(
                                     colors = FilterChipDefaults.filterChipColors(
                                         labelColor = colorResource(
@@ -211,14 +229,14 @@ fun ChatScreen(
                                         ),
                                     ),
                                     onClick = {
-                                        selected = !selected
-                                        viewModel.setActivities(it)
+                                        selectedStates[listItem] = !selectedStates[listItem]!!
+                                        viewModel.setActivities(listItem)
                                     },
                                     label = {
-                                        Text(it)
+                                        Text(listItem)
                                     },
-                                    selected = selected,
-                                    leadingIcon = if (selected) {
+                                    selected = selectedStates[listItem]!!,
+                                    leadingIcon = if (selectedStates[listItem]!!) {
                                         {
                                             Icon(
                                                 imageVector = Icons.Filled.Done,
@@ -233,6 +251,7 @@ fun ChatScreen(
                                 HorizontalSpacer(20.dp)
                             }
                         }
+
                         ElevatedButton(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -242,8 +261,8 @@ fun ChatScreen(
                                 visible = false
                                 sendMessageUiHandler(
                                     "Please suggest a " + number + " day itinerary for " + viewModel.destination.value + " " +
-                                        viewModel.generateDestinationsString() +
-                                        " with respective contact details and addresses",
+                                            viewModel.generateDestinationsString() +
+                                            " with respective contact details and addresses",
                                 )
                             },
                         ) {
@@ -251,36 +270,36 @@ fun ChatScreen(
                         }
                     }
 
-                    if (messagesList.isNotEmpty()) {
-                        if (listItems.size > 0) {
-                            listItems.removeRange(0, listItems.size - 1)
-                        }
-                        for (messageText in messagesList) {
-                            addMessageListItem(messageText, uiHandlers.onResendMessage)
-                        }
-                    }
-                   /* LaunchedEffect(messagesList) {
-                        if (!cleanMessagesList.contains(it)){
-                            cleanMessagesList[0] = it
-                        }
-                        addMessageListItem(it, uiHandlers.onResendMessage)
-                    }
-                    messagesList.co
-                   while( messagesList)
-                    { it ->
-                        if (!cleanMessagesList.contains(it)){
-                            cleanMessagesList[0] = it
-                        }
-                        addMessageListItem(it, uiHandlers.onResendMessage)
-                    }*/
-                    MyList(listItems = listItems)
+                    /* if (messagesList.isNotEmpty()) {
+                         if (listItems.size > 0) {
+                             listItems.removeRange(0, listItems.size - 1)
+                         }
+                         for (messageText in messagesList) {
+                             addMessageListItem(messageText, uiHandlers.onResendMessage)
+                         }
+                     }*/
+                    /* LaunchedEffect(messagesList) {
+                         if (!cleanMessagesList.contains(it)){
+                             cleanMessagesList[0] = it
+                         }
+                         addMessageListItem(it, uiHandlers.onResendMessage)
+                     }
+                     messagesList.co
+                    while( messagesList)
+                     { it ->
+                         if (!cleanMessagesList.contains(it)){
+                             cleanMessagesList[0] = it
+                         }
+                         addMessageListItem(it, uiHandlers.onResendMessage)
+                     }*/
+                    // MyList(listItems = listItems)
 
-                    /*MessageList(
+                    MessageList(
                         messagesList,
                         listState,
                         uiHandlers.onResendMessage,
                         viewModel,
-                    )*/
+                    )
                 }
             }
 
@@ -292,7 +311,7 @@ fun ChatScreen(
                 TextField(
                     value = inputValue,
                     onValueChange = {
-                         inputValue = it
+                        inputValue = it
                     },
                     label = { Text(stringResource(id = R.string.chat_message_placeholder)) },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
@@ -388,9 +407,9 @@ fun MessageList(
             )
         }
     }
-    viewModel.flightList.observeAsState().let {
+    /*viewModel.flightList.observeAsState().let {
         it.value?.let { it1 -> SearchFlight(flightList = it1) }
-    }
+    }*/
 }
 
 @Composable
@@ -436,7 +455,7 @@ fun MessageListItem(
                 }
                 .padding(vertical = 8.dp, horizontal = 16.dp),
 
-        )
+            )
         if (!message.isFromUser) {
             HorizontalSpacer(width = 16.dp)
             Box(
@@ -471,6 +490,7 @@ fun MessageListItem(
     }
     VerticalSpacer(height = 8.dp)
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
