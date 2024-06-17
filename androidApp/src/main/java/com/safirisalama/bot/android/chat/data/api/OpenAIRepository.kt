@@ -26,7 +26,7 @@ class OpenAIRepository(private val openAI: OpenAI) {
         val chatMessageList = conversation.toChatMessages().toMutableList()
         chatMessageList.add(systemChatMessage)
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4"),
+            model = ModelId("gpt-4o"),
             messages = chatMessageList,
         )
         for (value in chatMessageList) {
