@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.safirisalama.bot.android.chat.ui.ChatScreen
+import com.safirisalama.bot.android.chat.ui.SimpleChatScreen
 import com.safirisalama.bot.android.chat.ui.SplashScreen
 
 @Composable
@@ -18,7 +19,7 @@ fun RootNavHost() {
             SplashScreen(navController = navController)
         }
         composable(AppRouter.Screen.Home.route) {
-            ChatScreen()
+            SimpleChatScreen()
         }
     }
 }
