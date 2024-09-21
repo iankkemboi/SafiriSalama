@@ -45,7 +45,7 @@ fun SplashScreen(navController: NavController) {
             contentScale = ContentScale.Fit,
         )
         Button(
-            onClick = { navController.navigate(AppRouter.Screen.Home.route) },
+            onClick = { navController.navigate(AppRouter.Screen.GenerateItinerary.route) },
             modifier = Modifier.padding(16.dp),
         ) {
             Text(text = "Continue")

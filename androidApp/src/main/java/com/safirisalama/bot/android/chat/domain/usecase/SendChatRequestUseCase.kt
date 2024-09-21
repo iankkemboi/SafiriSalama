@@ -42,22 +42,27 @@ class SendChatRequestUseCase(
 
             is GPTResponse.Text ->
                 text = response.text
+            sendMessageToServer(text)
+
 
             else -> {
                 text = "Completed Else"
             }
         }
+    }
+    private fun sendMessageToServer(text: String){
+
         val newMessage = Message(
             text = text,
             isFromUser = false,
             messageStatus = MessageStatus.Sent,
         )
-         conversationRepository.addMessage(newMessage)
+        conversationRepository.addMessage(newMessage)
         conversationRepository.setMessageStatusToSent(newMessage.id)
     }
 
     private suspend fun displayMessage(prompt: String, message: Message): GPTResponse? {
-        val conversation = conversationRepository.addMessage(message)
+
 
         when (
             val action = extractAction(prompt)
@@ -74,6 +79,7 @@ class SendChatRequestUseCase(
 
             else -> {
                 try {
+                    val conversation = conversationRepository.addMessage(message)
                     val reply = openAIRepository.sendChatRequest(conversation)
 
                     return GPTResponse.Text(reply.text)

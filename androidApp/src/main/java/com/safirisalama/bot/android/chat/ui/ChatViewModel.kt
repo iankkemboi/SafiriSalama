@@ -1,5 +1,7 @@
 package com.safirisalama.bot.android.chat.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -54,6 +56,7 @@ class ChatViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun sendMessage(prompt: String) {
         viewModelScope.launch {
             sendChatRequestUseCase(
