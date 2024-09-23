@@ -102,7 +102,7 @@ class AmadeusApi {
         try {
             accessToken = getAccessToken()
             var url =
-                "https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=BER&destinationLocationCode=$destinationCode&departureDate=2024-05-02&adults=1&travelClass=PREMIUM_ECONOMY&nonStop=false&currencyCode=EUR&max=250"
+                "https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=BER&destinationLocationCode=$destinationCode&departureDate=2024-11-11&adults=1&travelClass=PREMIUM_ECONOMY&nonStop=false&currencyCode=EUR&max=250"
 
             val response: FlightOffersPriceResponse =
                 client.get(url) {

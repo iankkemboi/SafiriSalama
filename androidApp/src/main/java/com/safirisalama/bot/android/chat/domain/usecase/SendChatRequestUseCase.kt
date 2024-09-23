@@ -1,6 +1,7 @@
 package com.safirisalama.bot.android.chat.domain.usecase
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.safirisalama.bot.android.chat.data.ConversationRepository
 import com.safirisalama.bot.android.chat.data.GPTAction
@@ -36,22 +37,21 @@ class SendChatRequestUseCase(
                     is GPTAction.FlightPricesSelection ->
                         "Sure,let me look below for flight prices"
 
-                    is GPTAction.Transactions ->
-                        ""
                 }
 
             is GPTResponse.Text ->
                 text = response.text
-            sendMessageToServer(text)
 
 
             else -> {
                 text = "Completed Else"
             }
         }
+        sendMessageToServer(text)
     }
-    private fun sendMessageToServer(text: String){
 
+    private fun sendMessageToServer(text: String) {
+        Log.v("Flight prices", text)
         val newMessage = Message(
             text = text,
             isFromUser = false,
@@ -68,16 +68,18 @@ class SendChatRequestUseCase(
             val action = extractAction(prompt)
         ) {
             is GPTAction.DestinationSelection ->
-                return GPTResponse.Action(action)
+                Log.v("gptaction","destination")
+                //return GPTResponse.Action(action)
 
             is GPTAction.FlightPricesSelection ->
-                return GPTResponse.Action(action)
 
-            is GPTAction.Transactions,
-            ->
-                return GPTResponse.Action(action)
+                Log.v("gptaction","flight prices")
+              //  return GPTResponse.Action(action)
+
 
             else -> {
+
+                Log.v("gptaction","normal")
                 try {
                     val conversation = conversationRepository.addMessage(message)
                     val reply = openAIRepository.sendChatRequest(conversation)

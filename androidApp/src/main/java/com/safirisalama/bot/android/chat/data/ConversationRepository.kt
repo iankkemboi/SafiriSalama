@@ -93,10 +93,9 @@ sealed class GPTResponse {
 }
 
 sealed class GPTAction {
-    class DestinationSelection() : GPTAction()
-    class FlightPricesSelection() : GPTAction()
+    class DestinationSelection : GPTAction()
+    class FlightPricesSelection : GPTAction()
 
-    class Transactions(val count: Int, val description: String) : GPTAction()
 }
 
 fun extractAction(message: String): GPTAction? {
